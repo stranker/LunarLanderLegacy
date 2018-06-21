@@ -1,30 +1,50 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spaceship : MonoBehaviour {
+public class Spaceship : MonoBehaviour
+{
 
     private Rigidbody2D rd;
-    public float speed = 2;
-    public Vector2 velocity = Vector2.zero;
-    public Vector2 rdVelocity;
-    public Vector2 vec;
+    private Vector3 rotationVector = Vector3.zero;
+    public float speed = 50;
+    public float rotationSpeed = 40;
+    public float gravity;
+    public int maxRotation = 90;
 
-	// Use this for initialization
-	void Start () {
+
+    // Use this for initialization
+    void Start()
+    {
         rd = GetComponent<Rigidbody2D>();
         rd.velocity = new Vector2(0.5f, -0.1f);
-	}
-	
-	// Update is called once per frame
-	void Update () {
-      
-        velocity.y = Input.GetAxis("Vertical");
-        rd.velocity += (transform.up * velocity).normalized * speed * Time.deltaTime;
-        if (Input.GetKey(KeyCode.LeftArrow))
+        rotationVector = transform.rotation.eulerAngles;
+        rd.gravityScale = gravity;
+    }
+
+
+    private void FixedUpdate()
+    {
+        Movement();
+    }
+
+    private void Movement()
+    {
+        if (Input.GetAxis("Vertical") > 0.1f)
         {
-            transform.Rotate(new Vector3(transform.rotation.x,transform.rotation.y, transform.rotation.z + 5));
+            rd.AddForce(transform.up * speed * Time.deltaTime);
+            GetComponent<ParticleSystem>().Play();
         }
-        rdVelocity = rd.velocity;
+        else
+        {
+            GetComponent<ParticleSystem>().Stop();
+        }
+        if (Input.GetAxis("Horizontal") != 0)
+        {
+            rotationVector.z += Input.GetAxis("Horizontal") * rotationSpeed * Time.deltaTime;
+            rotationVector.z = Mathf.Clamp(rotationVector.z, -maxRotation, maxRotation);
+        }
+        transform.eulerAngles = rotationVector;
     }
 }
