@@ -188,7 +188,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 227458617}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1232089705}
+        m_MethodName: OnContinueButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &227458617
@@ -784,7 +795,7 @@ GameObject:
   - component: {fileID: 2047603152}
   - component: {fileID: 2047603151}
   m_Layer: 5
-  m_Name: Movement
+  m_Name: Input
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -840,8 +851,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "USE ARROW UP TO GAIN VERTICAL VELOCITY\n\n\n\nUSE LEFT AND RIGHT ARROWS
-    TO ROTATE\n THE SPACESHIP"
+  m_Text: "USE ARROW UP TO GAIN VERTICAL VELOCITY\n\n\nUSE LEFT AND RIGHT ARROWS TO
+    ROTATE\n THE SPACESHIP\n\n\nPRESS P TO PAUSE THE GAME"
 --- !u!222 &2047603152
 CanvasRenderer:
   m_ObjectHideFlags: 0
