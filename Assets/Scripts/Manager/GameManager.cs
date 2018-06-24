@@ -4,13 +4,27 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    public static GameManager instance = null;
+    public GameObject player;
+    public int score;
+    public float gameTime;
 
-	}
+    void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(gameObject);
+        DontDestroyOnLoad(gameObject);
+    }
+
+    // Use this for initialization
+    void Start() {
+        player = GameObject.FindGameObjectWithTag("Player");
+    }
+
+    public static GameManager Get()
+    {
+        return instance;
+    }
 }

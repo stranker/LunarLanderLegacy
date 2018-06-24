@@ -4,7 +4,9 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour {
 
     public GameObject pausePanel;
-    public Text score, time, fuel, altitude, horiontalSpeed, verticalSpeed;
+    public Text scoreText, timeText, fuelText, altitudeText, horizontalSpeedText, verticalSpeedText;
+    public int score, fuel, horizontalSpeed, verticalSpeed;
+    public int altitude;
 
     private void Start()
     {
@@ -17,6 +19,7 @@ public class UIManager : MonoBehaviour {
         {
             OnPauseButton();
         }
+        SetTexts();
     }
 
     public void OnPauseButton()
@@ -24,4 +27,36 @@ public class UIManager : MonoBehaviour {
         pausePanel.SetActive(true);
         Time.timeScale = 0;
     }
+
+    public void SetTexts()
+    {
+        GameManager gm = GameManager.Get();
+        Spaceship player = gm.player.GetComponent<Spaceship>();
+        if (score != gm.score)
+        {
+            score = gm.score;
+            scoreText.text = "SCORE " + score.ToString("0000");
+        }
+        if (fuel != player.fuel)
+        {
+            fuel = player.fuel;
+            fuelText.text = "FUEL " + fuel.ToString("0000");
+        }
+        if (verticalSpeed != (int)player.velocity.y)
+        {
+            verticalSpeed = (int)player.velocity.y;
+            verticalSpeedText.text = "VERTICAL SPEED " + verticalSpeed.ToString();
+        }
+        if (horizontalSpeed != (int)player.velocity.x)
+        {
+            horizontalSpeed = (int)player.velocity.x;
+            horizontalSpeedText.text = "HORIZONTAL SPEED " + horizontalSpeed.ToString();
+        }
+        if (altitude != (int)player.altitude)
+        {
+            altitude = (int)player.altitude;
+            altitudeText.text = "ALTITUDE " + altitude.ToString();
+        }
+    }
+
 }

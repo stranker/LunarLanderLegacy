@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour {
@@ -27,6 +28,7 @@ public class MainMenu : MonoBehaviour {
 
     public void OnExitButton()
     {
+        EditorApplication.isPaused = true;
         Application.Quit();
     }
 

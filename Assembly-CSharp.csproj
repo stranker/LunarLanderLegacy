@@ -59,12 +59,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Camera\CameraFollow.cs" />
     <Compile Include="Assets\Scripts\Manager\GameManager.cs" />
     <Compile Include="Assets\Scripts\Manager\UIManager.cs" />
     <Compile Include="Assets\Scripts\Scenes\InputScene.cs" />
     <Compile Include="Assets\Scripts\Scenes\MainMenu.cs" />
     <Compile Include="Assets\Scripts\Scenes\PausePanel.cs" />
     <Compile Include="Assets\Scripts\Spaceship.cs" />
+    <Compile Include="Assets\Scripts\Terrain\TerrainGenerator.cs" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>C:/Users/Daniel/Desktop/Proyectos/Unity/LunarLanderLegacy/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
