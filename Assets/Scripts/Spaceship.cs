@@ -12,6 +12,13 @@ public class Spaceship : MonoBehaviour
     public float rotationSpeed = 40;
     public float gravity;
     public int maxRotation = 90;
+    public int fuel;
+    public int MAX_FUEL;
+    public Vector2 velocity;
+    public float altitude;
+    public float fuelTime;
+    public float fuelConsumptionTime;
+    public LayerMask terrainLayer;
 
 
     // Use this for initialization
@@ -21,12 +28,27 @@ public class Spaceship : MonoBehaviour
         rd.velocity = new Vector2(0.5f, -0.1f);
         rotationVector = transform.rotation.eulerAngles;
         rd.gravityScale = gravity;
+        MAX_FUEL = 500;
+        fuel = MAX_FUEL;
+        fuelConsumptionTime = 0.5f;
     }
 
 
     private void FixedUpdate()
     {
         Movement();
+        FuelControl();
+        AltitudeControl();
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - GetComponent<SpriteRenderer>().bounds.size.y / 2), -Vector3.up * 10, Color.red);
+    }
+
+    private void AltitudeControl()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up, 20, terrainLayer);
+        if (hit.collider.tag == "Terrain")
+        {
+            altitude = GetComponent<SpriteRenderer>().bounds.min.y - hit.point.y;
+        }
     }
 
     private void Movement()
@@ -35,6 +57,7 @@ public class Spaceship : MonoBehaviour
         {
             rd.AddForce(transform.up * speed * Time.deltaTime);
             GetComponent<ParticleSystem>().Play();
+            fuelTime += Time.deltaTime;
         }
         else
         {
@@ -46,5 +69,16 @@ public class Spaceship : MonoBehaviour
             rotationVector.z = Mathf.Clamp(rotationVector.z, -maxRotation, maxRotation);
         }
         transform.eulerAngles = rotationVector;
+        velocity = rd.velocity * speed;
     }
+
+    private void FuelControl()
+    {
+        if (fuelTime >= fuelConsumptionTime)
+        {
+            fuel--;
+            fuelTime = 0;
+        }
+    }
+
 }
