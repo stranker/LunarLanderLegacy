@@ -100,6 +100,13 @@ MonoBehaviour:
   maxLowPit: 7
   minLowPit: 2
   firstPointX: -10
+  chunksPredefined: 
+  chunksInGame: 
+  windZones: []
+  windZonesAmount: 0
+  terrainLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!120 &120979128597121704
 LineRenderer:
   m_ObjectHideFlags: 1
@@ -115,7 +122,7 @@ LineRenderer:
   m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: a0aa1dad44c186b41a6630f05238a7a0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

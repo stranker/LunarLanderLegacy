@@ -13,11 +13,16 @@ public class TerrainGenerator : MonoBehaviour {
     public float maxLowPit;
     public float minLowPit;
     public int firstPointX;
-    private List<int> chunks;
+    [Range(0,2)]
+    public List<int> chunksPredefined;
+    public List<int> chunksInGame;
+    public List<GameObject> windZones;
+    public int windZonesAmount;
+    public LayerMask terrainLayer;
+    public int distanceBetweenWinds;
 
     private void Start()
     {
-        chunks = new List<int>();
         CreateTerrain();
     }
 
@@ -29,10 +34,18 @@ public class TerrainGenerator : MonoBehaviour {
         List<Vector3> terrainPositions = new List<Vector3>();
         terrainPositions.Add(firstPoint);
         terrain.positionCount = 1;
-        for (int i = 0; i < chunkCount; i++)
+        chunksInGame = new List<int>();
+        if (chunksPredefined.Count > 0)
         {
-            chunks.Add(UnityEngine.Random.Range(0, 3));
-            switch (chunks[i])
+            chunksInGame = chunksPredefined;
+        }
+        else
+        {
+            chunksInGame = GenerateRandomChunks(chunkCount);
+        }
+        for (int i = 0; i < chunksInGame.Count; i++)
+        {
+            switch (chunksInGame[i])
             {
                 case 0:
                     terrain.positionCount += planeTerrainWidth;
@@ -55,6 +68,17 @@ public class TerrainGenerator : MonoBehaviour {
             terrain.SetPosition(i, terrainPositions[i]);
         }
         CreateTerrainCollider(terrainPositions);
+        CreateWindZones();
+    }
+
+    private void CreateWindZones()
+    {
+        Vector3 initialPos = new Vector3(firstPointX, maxHighMountain);
+        for (int i = 0; i < windZonesAmount; i++)
+        {
+            initialPos.x += distanceBetweenWinds;
+            Instantiate(windZones[UnityEngine.Random.Range(0, windZones.Count)], initialPos, transform.rotation, transform);
+        }
     }
 
     private void CreateTerrainCollider(List<Vector3> terrainPositions)
@@ -126,4 +150,26 @@ public class TerrainGenerator : MonoBehaviour {
             listPoint.Add(point);
         }
     }
+
+    private List<int> GenerateRandomChunks(int count)
+    {
+        List<int> chunks = new List<int>();
+        int noPlaneTerrainCount = 0;
+        // Lleno aleatoriamente
+        for (int i = 0; i < count; i++)
+        {
+            chunks.Add(UnityEngine.Random.Range(0, 3));
+            // sumo si no es plano
+            if (chunks[i] != 0)
+                noPlaneTerrainCount++;
+            // si tengo mas de 2 terrenos no planos consecutivos, el ultimo es plano
+            if (noPlaneTerrainCount > 2)
+            {
+                chunks[i] = 0;
+                noPlaneTerrainCount = 0;
+            }
+        }
+        return chunks;
+    }
+
 }

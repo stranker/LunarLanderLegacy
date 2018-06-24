@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour {
 
     public static GameManager instance = null;
     public GameObject player;
+    public GameObject terrain;
     public int score;
     public float gameTime;
 
@@ -21,7 +22,8 @@ public class GameManager : MonoBehaviour {
     // Use this for initialization
     void Start() {
         player = GameObject.FindGameObjectWithTag("Player");
-        player.transform.position = new Vector2(0,5);
+        terrain = GameObject.FindGameObjectWithTag("Terrain");
+        player.transform.position = new Vector2(0,terrain.GetComponent<TerrainGenerator>().maxHighMountain + 1);
     }
 
     public static GameManager Get()
