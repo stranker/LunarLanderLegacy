@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour {
     // Use this for initialization
     void Start() {
         player = GameObject.FindGameObjectWithTag("Player");
+        player.transform.position = new Vector2(0,5);
     }
 
     public static GameManager Get()

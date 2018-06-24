@@ -19,13 +19,15 @@ public class Spaceship : MonoBehaviour
     public float fuelTime;
     public float fuelConsumptionTime;
     public LayerMask terrainLayer;
+    private const int altitudeMagnitudeConverter = 10;
+    public Vector2 initialVelocity;
 
 
     // Use this for initialization
     void Start()
     {
         rd = GetComponent<Rigidbody2D>();
-        rd.velocity = new Vector2(0.5f, -0.1f);
+        rd.velocity = initialVelocity;
         rotationVector = transform.rotation.eulerAngles;
         rd.gravityScale = gravity;
         MAX_FUEL = 500;
@@ -44,10 +46,10 @@ public class Spaceship : MonoBehaviour
 
     private void AltitudeControl()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up, 20, terrainLayer);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up, Mathf.Infinity, terrainLayer);
         if (hit.collider.tag == "Terrain")
         {
-            altitude = GetComponent<SpriteRenderer>().bounds.min.y - hit.point.y;
+            altitude = (GetComponent<SpriteRenderer>().bounds.min.y - hit.point.y) * altitudeMagnitudeConverter;
         }
     }
 
