@@ -21,6 +21,7 @@ public class Spaceship : MonoBehaviour
     public LayerMask terrainLayer;
     private const int altitudeMagnitudeConverter = 10;
     public Vector2 initialVelocity;
+    private bool landed = false;
 
 
     // Use this for initialization
@@ -41,7 +42,7 @@ public class Spaceship : MonoBehaviour
         Movement();
         FuelControl();
         AltitudeControl();
-        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - GetComponent<SpriteRenderer>().bounds.size.y / 2), -Vector3.up * 10, Color.red);
+        GroundControl();
     }
 
     private void AltitudeControl()
@@ -50,6 +51,23 @@ public class Spaceship : MonoBehaviour
         if (hit.collider.tag == "Terrain")
         {
             altitude = (GetComponent<SpriteRenderer>().bounds.min.y - hit.point.y) * altitudeMagnitudeConverter;
+        }
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - GetComponent<SpriteRenderer>().bounds.size.y / 2), -Vector3.up * 10, Color.red);
+    }
+
+    private void GroundControl()
+    {
+        Vector2 spriteSize = GetComponent<SpriteRenderer>().bounds.size;
+        Vector2 leftRayPos = new Vector2(transform.position.x - spriteSize.x / 2, transform.position.y - spriteSize.y / 2);
+        Vector2 rightRayPos = new Vector2(transform.position.x + spriteSize.x / 2, transform.position.y - spriteSize.y / 2);
+        RaycastHit2D leftRay = Physics2D.Raycast(leftRayPos, -transform.up, 0.1f, terrainLayer);
+        RaycastHit2D rightRay = Physics2D.Raycast(leftRayPos, -transform.up, 0.1f, terrainLayer);
+        if (leftRay && rightRay && !landed)
+        {
+            if (Mathf.Abs(velocity.x) < 5 && Mathf.Abs(velocity.y) < 5)
+            {
+                landed = true;
+            }
         }
     }
 

@@ -7,10 +7,12 @@ public class UIManager : MonoBehaviour {
     public Text scoreText, timeText, fuelText, altitudeText, horizontalSpeedText, verticalSpeedText;
     public int score, fuel, horizontalSpeed, verticalSpeed;
     public int altitude;
+    public float time;
 
     private void Start()
     {
         pausePanel.SetActive(false);
+        scoreText.text = "SCORE 0000";
     }
 
     // Update is called once per frame
@@ -57,6 +59,10 @@ public class UIManager : MonoBehaviour {
             altitude = (int)player.altitude;
             altitudeText.text = "ALTITUDE " + altitude.ToString();
         }
+        time = gm.gameTime - Time.time;
+        string minutes = ((int)time / 60).ToString();
+        string seconds = (time % 60).ToString("00");
+        timeText.text = minutes + ":" + seconds;
     }
 
 }
