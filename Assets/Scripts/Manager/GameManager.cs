@@ -11,8 +11,15 @@ public class GameManager : MonoBehaviour {
     public GameObject terrain;
     public int score = 0;
     public float gameTime;
+    public float currentGameTime;
     public int currentLevel = 1;
     public int remainingFuel;
+    public int scoreOnLanding = 150;
+    public bool playing = false;
+    private bool scoreAdded = false;
+    private bool gameOver = false;
+    public int initSpaceshipPosX = 10;
+    private const int offsetSpaceshipY = 2;
 
     void Awake()
     {
@@ -28,11 +35,54 @@ public class GameManager : MonoBehaviour {
         GetRunnableParameters();
     }
 
+    private void Update()
+    {
+        TimeControl();
+        PlayerControl();
+    }
+
+    private void PlayerControl()
+    {
+        if (player)
+        {
+            Spaceship p = player.GetComponent<Spaceship>();
+            if (!p.GetAlive() || p.IsLanded())
+            {
+                remainingFuel = p.fuel;
+                playing = false;
+                if (p.GetAlive() && !scoreAdded)
+                {
+                    scoreAdded = true;
+                    AddScore();
+                }
+            }
+        }
+    }
+
+    private void TimeControl()
+    {
+        if (playing)
+        {
+            currentGameTime = gameTime - Time.time;
+            if (currentGameTime <= 0)
+            {
+                currentGameTime = 0;
+                if (!gameOver)
+                {
+                    gameOver = true;
+                }
+            }
+        }
+    }
+
+
     private void GetRunnableParameters()
     {
+        playing = true;
+        scoreAdded = false;
         player = GameObject.FindGameObjectWithTag("Player");
         terrain = GameObject.FindGameObjectWithTag("Terrain");
-        player.transform.position = new Vector2(0, terrain.GetComponent<TerrainGenerator>().maxHighMountain + 1);
+        player.transform.position = new Vector2(initSpaceshipPosX, terrain.GetComponent<TerrainGenerator>().maxHighMountain + offsetSpaceshipY);
         if (currentLevel == 1)
         {
             remainingFuel = player.GetComponent<Spaceship>().fuel;
@@ -61,4 +111,10 @@ public class GameManager : MonoBehaviour {
             GetRunnableParameters();
         }
     }
+
+    public void AddScore()
+    {
+        score += scoreOnLanding;
+    }
+
 }

@@ -34,19 +34,15 @@ public class Spaceship : MonoBehaviour
         fuel = MAX_FUEL;
     }
 
-    // Use this for initialization
-    void Start()
-    {
-
-    }
-
-
     private void FixedUpdate()
     {
-        if (alive)
+        if (alive && !landed)
         {
-            Movement();
-            FuelControl();
+            if (fuel > 0)
+            {
+                Movement();
+                FuelControl();
+            }
             AltitudeControl();
             GroundControl();
         }
@@ -67,11 +63,11 @@ public class Spaceship : MonoBehaviour
         Vector2 spriteSize = GetComponent<SpriteRenderer>().bounds.size;
         Vector2 leftRayPos = new Vector2(transform.position.x - spriteSize.x / 2, transform.position.y - spriteSize.y / 2);
         Vector2 rightRayPos = new Vector2(transform.position.x + spriteSize.x / 2, transform.position.y - spriteSize.y / 2);
-        RaycastHit2D leftRay = Physics2D.Raycast(leftRayPos, -transform.up, 0.1f, terrainLayer);
-        RaycastHit2D rightRay = Physics2D.Raycast(rightRayPos, -transform.up, 0.1f, terrainLayer);
+        RaycastHit2D leftRay = Physics2D.Raycast(leftRayPos, -transform.up, 0.2f, terrainLayer);
+        RaycastHit2D rightRay = Physics2D.Raycast(rightRayPos, -transform.up, 0.2f, terrainLayer);
         if (leftRay && rightRay && !landed)
         {
-            if (Mathf.Abs(velocity.x) < 5 && Mathf.Abs(velocity.y) < 5)
+            if (Mathf.Abs(velocity.x) < 15 && Mathf.Abs(velocity.y) < 20)
             {
                 landed = true;
             }
@@ -106,6 +102,10 @@ public class Spaceship : MonoBehaviour
             fuel--;
             fuelTime = 0;
         }
+        if (fuel <= 0)
+        {
+            fuel = 0;
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -123,7 +123,6 @@ public class Spaceship : MonoBehaviour
     {
         alive = false;
         fuel -= decreaseFuelOnDeath;
-        GameManager.Get().remainingFuel = fuel;
     }
 
     public bool GetAlive()
@@ -139,6 +138,11 @@ public class Spaceship : MonoBehaviour
     public int GetFuelDecreaseOnDeath()
     {
         return decreaseFuelOnDeath;
+    }
+
+    public bool IsLanded()
+    {
+        return landed;
     }
 
 }

@@ -16,7 +16,7 @@ public class UIManager : MonoBehaviour {
     public Text quantityText;
     public int score, fuel, horizontalSpeed, verticalSpeed;
     public int altitude;
-    public float time;
+
 
     private void Start()
     {
@@ -38,11 +38,20 @@ public class UIManager : MonoBehaviour {
     private void ShowOptionsOnPlayerCollision()
     {
         Spaceship player = GameManager.Get().player.GetComponent<Spaceship>();
-        if (!player.GetAlive() && !landingPanel.activeInHierarchy)
+        if (!landingPanel.activeInHierarchy)
         {
-            landingPanel.SetActive(true);
-            resultText.text = "FUEL TANK DESTROYED!";
-            quantityText.text = "YOU LOST " + player.GetFuelDecreaseOnDeath() + " UNITS OF FUEL";
+            if (!player.GetAlive())
+            {
+                landingPanel.SetActive(true);
+                resultText.text = "FUEL TANK DESTROYED!";
+                quantityText.text = "YOU LOST " + player.GetFuelDecreaseOnDeath() + " UNITS OF FUEL";
+            }
+            else if (player.IsLanded())
+            {
+                landingPanel.SetActive(true);
+                resultText.text = "SUCCESSFUL LANDING!";
+                quantityText.text = "YOU EARNED " + GameManager.Get().scoreOnLanding + " POINTS!";
+            }
         }
     }
 
@@ -81,11 +90,10 @@ public class UIManager : MonoBehaviour {
             altitude = (int)player.altitude;
             altitudeText.text = "ALTITUDE " + altitude.ToString();
         }
-        if (player.GetAlive())
+        if (gm.playing)
         {
-            time = gm.gameTime - Time.time;
-            string minutes = ((int)time / 60).ToString();
-            string seconds = (time % 60).ToString("00");
+            string minutes = ((int)gm.currentGameTime / 60).ToString();
+            string seconds = (gm.currentGameTime % 60).ToString("00");
             timeText.text = minutes + ":" + seconds;
         }
     }
