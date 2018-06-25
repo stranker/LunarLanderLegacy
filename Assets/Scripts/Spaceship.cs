@@ -13,36 +13,43 @@ public class Spaceship : MonoBehaviour
     public float gravity;
     public int maxRotation = 90;
     public int fuel;
-    public int MAX_FUEL;
+    public int MAX_FUEL = 800;
     public Vector2 velocity;
     public float altitude;
     public float fuelTime;
-    public float fuelConsumptionTime;
+    public float fuelConsumptionTime = 0.5f;
     public LayerMask terrainLayer;
     private const int altitudeMagnitudeConverter = 10;
     public Vector2 initialVelocity;
     private bool landed = false;
+    private bool alive = true;
+    private int decreaseFuelOnDeath = 200;
 
-
-    // Use this for initialization
-    void Start()
+    private void Awake()
     {
         rd = GetComponent<Rigidbody2D>();
         rd.velocity = initialVelocity;
         rotationVector = transform.rotation.eulerAngles;
         rd.gravityScale = gravity;
-        MAX_FUEL = 500;
         fuel = MAX_FUEL;
-        fuelConsumptionTime = 0.5f;
+    }
+
+    // Use this for initialization
+    void Start()
+    {
+
     }
 
 
     private void FixedUpdate()
     {
-        Movement();
-        FuelControl();
-        AltitudeControl();
-        GroundControl();
+        if (alive)
+        {
+            Movement();
+            FuelControl();
+            AltitudeControl();
+            GroundControl();
+        }
     }
 
     private void AltitudeControl()
@@ -61,7 +68,7 @@ public class Spaceship : MonoBehaviour
         Vector2 leftRayPos = new Vector2(transform.position.x - spriteSize.x / 2, transform.position.y - spriteSize.y / 2);
         Vector2 rightRayPos = new Vector2(transform.position.x + spriteSize.x / 2, transform.position.y - spriteSize.y / 2);
         RaycastHit2D leftRay = Physics2D.Raycast(leftRayPos, -transform.up, 0.1f, terrainLayer);
-        RaycastHit2D rightRay = Physics2D.Raycast(leftRayPos, -transform.up, 0.1f, terrainLayer);
+        RaycastHit2D rightRay = Physics2D.Raycast(rightRayPos, -transform.up, 0.1f, terrainLayer);
         if (leftRay && rightRay && !landed)
         {
             if (Mathf.Abs(velocity.x) < 5 && Mathf.Abs(velocity.y) < 5)
@@ -99,6 +106,39 @@ public class Spaceship : MonoBehaviour
             fuel--;
             fuelTime = 0;
         }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.transform.tag == "Terrain")
+        {
+            if (!landed && alive)
+            {
+                Kill();
+            }
+        }
+    }
+
+    private void Kill()
+    {
+        alive = false;
+        fuel -= decreaseFuelOnDeath;
+        GameManager.Get().remainingFuel = fuel;
+    }
+
+    public bool GetAlive()
+    {
+        return alive;
+    }
+
+    public void SetAlive(bool val)
+    {
+        alive = val;
+    }
+
+    public int GetFuelDecreaseOnDeath()
+    {
+        return decreaseFuelOnDeath;
     }
 
 }

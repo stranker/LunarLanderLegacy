@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
@@ -9,7 +11,8 @@ public class GameManager : MonoBehaviour {
     public GameObject terrain;
     public int score = 0;
     public float gameTime;
-    public bool isPlaying = true;
+    public int currentLevel = 1;
+    public int remainingFuel;
 
     void Awake()
     {
@@ -22,18 +25,40 @@ public class GameManager : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-        player = GameObject.FindGameObjectWithTag("Player");
-        terrain = GameObject.FindGameObjectWithTag("Terrain");
-        player.transform.position = new Vector2(0,terrain.GetComponent<TerrainGenerator>().maxHighMountain + 1);
+        GetRunnableParameters();
     }
 
-    private void Update()
+    private void GetRunnableParameters()
     {
-        
+        player = GameObject.FindGameObjectWithTag("Player");
+        terrain = GameObject.FindGameObjectWithTag("Terrain");
+        player.transform.position = new Vector2(0, terrain.GetComponent<TerrainGenerator>().maxHighMountain + 1);
+        if (currentLevel == 1)
+        {
+            remainingFuel = player.GetComponent<Spaceship>().fuel;
+        }
+        else
+        {
+            player.GetComponent<Spaceship>().fuel = remainingFuel;
+        }
     }
 
     public static GameManager Get()
     {
         return instance;
+    }
+
+    public void NextLevel()
+    {
+        currentLevel++;
+        SceneManager.LoadScene("LoadingScene");
+    }
+
+    private void OnLevelWasLoaded(int level)
+    {
+        if (level == 2)
+        {
+            GetRunnableParameters();
+        }
     }
 }

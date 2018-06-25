@@ -5,7 +5,7 @@ public class InputScene : MonoBehaviour {
 
     public void OnContinueButton()
     {
-        SceneManager.LoadScene("GameScene");
+        SceneManager.LoadScene("LoadingScene");
     }
 
     public void OnMenuButton()

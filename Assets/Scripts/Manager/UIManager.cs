@@ -1,10 +1,19 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour {
 
     public GameObject pausePanel;
-    public Text scoreText, timeText, fuelText, altitudeText, horizontalSpeedText, verticalSpeedText;
+    public GameObject landingPanel;
+    public Text scoreText;
+    public Text timeText;
+    public Text fuelText;
+    public Text altitudeText;
+    public Text horizontalSpeedText;
+    public Text verticalSpeedText;
+    public Text resultText;
+    public Text quantityText;
     public int score, fuel, horizontalSpeed, verticalSpeed;
     public int altitude;
     public float time;
@@ -12,6 +21,7 @@ public class UIManager : MonoBehaviour {
     private void Start()
     {
         pausePanel.SetActive(false);
+        landingPanel.SetActive(false);
         scoreText.text = "SCORE 0000";
     }
 
@@ -22,6 +32,18 @@ public class UIManager : MonoBehaviour {
             OnPauseButton();
         }
         SetTexts();
+        ShowOptionsOnPlayerCollision();
+    }
+
+    private void ShowOptionsOnPlayerCollision()
+    {
+        Spaceship player = GameManager.Get().player.GetComponent<Spaceship>();
+        if (!player.GetAlive() && !landingPanel.activeInHierarchy)
+        {
+            landingPanel.SetActive(true);
+            resultText.text = "FUEL TANK DESTROYED!";
+            quantityText.text = "YOU LOST " + player.GetFuelDecreaseOnDeath() + " UNITS OF FUEL";
+        }
     }
 
     public void OnPauseButton()
@@ -59,10 +81,18 @@ public class UIManager : MonoBehaviour {
             altitude = (int)player.altitude;
             altitudeText.text = "ALTITUDE " + altitude.ToString();
         }
-        time = gm.gameTime - Time.time;
-        string minutes = ((int)time / 60).ToString();
-        string seconds = (time % 60).ToString("00");
-        timeText.text = minutes + ":" + seconds;
+        if (player.GetAlive())
+        {
+            time = gm.gameTime - Time.time;
+            string minutes = ((int)time / 60).ToString();
+            string seconds = (time % 60).ToString("00");
+            timeText.text = minutes + ":" + seconds;
+        }
+    }
+
+    public void OnContinueButton()
+    {
+        GameManager.Get().NextLevel();
     }
 
 }
