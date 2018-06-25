@@ -68,6 +68,7 @@
     <Compile Include="Assets\Scripts\Scenes\PausePanel.cs" />
     <Compile Include="Assets\Scripts\Spaceship.cs" />
     <Compile Include="Assets\Scripts\Terrain\TerrainGenerator.cs" />
+    <None Include="Assets\Fonts\8_bit_madness\readme.txt" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>C:/Users/Daniel/Desktop/Proyectos/Unity/LunarLanderLegacy/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
