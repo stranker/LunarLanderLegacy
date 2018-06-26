@@ -1,11 +1,12 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour {
 
     public GameObject pausePanel;
-    public GameObject landingPanel;
+    public GameObject resultPanel;
     public Text scoreText;
     public Text timeText;
     public Text fuelText;
@@ -21,7 +22,7 @@ public class UIManager : MonoBehaviour {
     private void Start()
     {
         pausePanel.SetActive(false);
-        landingPanel.SetActive(false);
+        resultPanel.SetActive(false);
         scoreText.text = "SCORE 0000";
     }
 
@@ -38,19 +39,28 @@ public class UIManager : MonoBehaviour {
     private void ShowOptionsOnPlayerCollision()
     {
         Spaceship player = GameManager.Get().player.GetComponent<Spaceship>();
-        if (!landingPanel.activeInHierarchy)
+        if (!resultPanel.activeInHierarchy)
         {
-            if (!player.GetAlive())
+            if (GameManager.Get().gameOver)
             {
-                landingPanel.SetActive(true);
-                resultText.text = "FUEL TANK DESTROYED!";
-                quantityText.text = "YOU LOST " + player.GetFuelDecreaseOnDeath() + " UNITS OF FUEL";
+                resultPanel.SetActive(true);
+                resultText.text = "GAME OVER!";
+                quantityText.text = "YOU SCORED " + GameManager.Get().score + " POINTS!";
             }
-            else if (player.IsLanded())
+            else
             {
-                landingPanel.SetActive(true);
-                resultText.text = "SUCCESSFUL LANDING!";
-                quantityText.text = "YOU EARNED " + GameManager.Get().scoreOnLanding + " POINTS!";
+                if (!player.GetAlive())
+                {
+                    resultPanel.SetActive(true);
+                    resultText.text = "FUEL TANK DESTROYED!";
+                    quantityText.text = "YOU LOST " + player.GetFuelDecreaseOnDeath() + " UNITS OF FUEL";
+                }
+                else if (player.IsLanded())
+                {
+                    resultPanel.SetActive(true);
+                    resultText.text = "SUCCESSFUL LANDING!";
+                    quantityText.text = "YOU EARNED " + GameManager.Get().scoreOnLanding + " POINTS!";
+                }
             }
         }
     }
@@ -100,7 +110,14 @@ public class UIManager : MonoBehaviour {
 
     public void OnContinueButton()
     {
-        GameManager.Get().NextLevel();
+        if (!GameManager.Get().gameOver)
+        {
+            GameManager.Get().NextLevel();
+        }
+        else
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
     }
 
 }

@@ -6,8 +6,6 @@ using UnityEngine;
 public class Spaceship : MonoBehaviour
 {
 
-    private Rigidbody2D rd;
-    private Vector3 rotationVector = Vector3.zero;
     public float speed = 50;
     public float rotationSpeed = 40;
     public float gravity;
@@ -17,13 +15,15 @@ public class Spaceship : MonoBehaviour
     public Vector2 velocity;
     public float altitude;
     public float fuelTime;
-    public float fuelConsumptionTime = 0.5f;
+    public float fuelConsumptionTime = 0.2f;
     public LayerMask terrainLayer;
-    private const int altitudeMagnitudeConverter = 10;
     public Vector2 initialVelocity;
-    private bool landed = false;
-    private bool alive = true;
-    private int decreaseFuelOnDeath = 200;
+    public bool alive = true;
+    public bool landed = false;
+
+    private const int altitudeMagnitudeConverter = 10;
+    private int decreaseFuelOnDeath = 200; private Rigidbody2D rd;
+    private Vector3 rotationVector = Vector3.zero;
 
     private void Awake()
     {
@@ -41,8 +41,8 @@ public class Spaceship : MonoBehaviour
             if (fuel > 0)
             {
                 Movement();
-                FuelControl();
             }
+            FuelControl();
             AltitudeControl();
             GroundControl();
         }
@@ -65,7 +65,7 @@ public class Spaceship : MonoBehaviour
         Vector2 rightRayPos = new Vector2(transform.position.x + spriteSize.x / 2, transform.position.y - spriteSize.y / 2);
         RaycastHit2D leftRay = Physics2D.Raycast(leftRayPos, -transform.up, 0.2f, terrainLayer);
         RaycastHit2D rightRay = Physics2D.Raycast(rightRayPos, -transform.up, 0.2f, terrainLayer);
-        if (leftRay && rightRay && !landed)
+        if (leftRay && rightRay && !landed && alive)
         {
             if (Mathf.Abs(velocity.x) < 15 && Mathf.Abs(velocity.y) < 20)
             {

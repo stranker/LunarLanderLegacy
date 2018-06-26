@@ -325,7 +325,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &575830532
 RectTransform:
   m_ObjectHideFlags: 0
@@ -620,8 +620,16 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "Programmer: Daniel H. Natarelli\n\n2D Artist: Daniel H. Natarelli\n\nGame
-    Designer: Federico Barra\n\n\nSpecial thanks to\n Tower Code Games"
+  m_Text: 'Programmer: Daniel H. Natarelli
+
+
+    2D Artist: Daniel H. Natarelli
+
+
+    Game Designer: Federico Barra
+
+
+    Font: www.dafont.com'
 --- !u!222 &1071662984
 CanvasRenderer:
   m_ObjectHideFlags: 0

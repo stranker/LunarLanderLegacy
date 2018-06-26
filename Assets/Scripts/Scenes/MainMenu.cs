@@ -9,6 +9,10 @@ public class MainMenu : MonoBehaviour {
     private void Start()
     {
         OnCloseCreditsButton();
+        if (GameManager.Get())
+        {
+            Destroy(GameManager.Get().gameObject);
+        }
     }
 
     public void OnPlayButton()
@@ -28,7 +32,6 @@ public class MainMenu : MonoBehaviour {
 
     public void OnExitButton()
     {
-        EditorApplication.isPaused = true;
         Application.Quit();
     }
 

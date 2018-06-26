@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,14 +8,14 @@ public class GameManager : MonoBehaviour {
     public GameObject player;
     public GameObject terrain;
     public int score = 0;
-    public float gameTime;
+    public float gameTime = 120;
     public float currentGameTime;
     public int currentLevel = 1;
     public int remainingFuel;
     public int scoreOnLanding = 150;
     public bool playing = false;
     private bool scoreAdded = false;
-    private bool gameOver = false;
+    public bool gameOver = false;
     public int initSpaceshipPosX = 10;
     private const int offsetSpaceshipY = 2;
 
@@ -32,6 +30,7 @@ public class GameManager : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
+        currentGameTime = gameTime;
         GetRunnableParameters();
     }
 
@@ -46,14 +45,23 @@ public class GameManager : MonoBehaviour {
         if (player)
         {
             Spaceship p = player.GetComponent<Spaceship>();
-            if (!p.GetAlive() || p.IsLanded())
+            if (playing)
             {
-                remainingFuel = p.fuel;
-                playing = false;
-                if (p.GetAlive() && !scoreAdded)
+                if (p.landed && !scoreAdded)
                 {
                     scoreAdded = true;
                     AddScore();
+                    playing = false;
+                }
+                if (p.fuel <= 0 && !p.GetAlive())
+                {
+                    gameOver = true;
+                    playing = false;
+                }
+                if (!p.GetAlive() || p.IsLanded())
+                {
+                    remainingFuel = p.fuel;
+                    playing = false;
                 }
             }
         }
@@ -63,7 +71,7 @@ public class GameManager : MonoBehaviour {
     {
         if (playing)
         {
-            currentGameTime = gameTime - Time.time;
+            currentGameTime = gameTime - Time.timeSinceLevelLoad;
             if (currentGameTime <= 0)
             {
                 currentGameTime = 0;
